@@ -1,6 +1,6 @@
-using FaceShuffle.Web;
 using FaceShuffle.Web.DependenciesInstallers;
 using FaceShuffle.Web.Endpoints.Utilities;
+using FaceShuffle.Web.Endpoints.Utilities.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(IAssemblyMarker).Assembly,
-                                                                  typeof(FaceShuffle.Application.IAssemblyMarker).Assembly));
+builder.Services.AddMediatR();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddSwagger();
+builder.Services.AddSwaggerGen();
+builder.Services.AddLazyServices();
+builder.Services.AddScoped(typeof(AuthorizedRequestHandler<,>), typeof(AuthorizedRequestHandler<,>));
 
 var app = builder.Build();
 

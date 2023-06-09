@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Application.Abstractions.Auth;
+using FaceShuffle.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FaceShuffle.Web.Utilities;
@@ -27,5 +29,8 @@ public static class AuthenticationInstaller
         });
 
         services.AddAuthorization();
+
+        services.AddScoped<IUserIdentityProvider, UserIdentityProvider>();
+        services.AddScoped(s => s.GetRequiredService<IUserIdentityProvider>().UserIdentity);
     }
 }

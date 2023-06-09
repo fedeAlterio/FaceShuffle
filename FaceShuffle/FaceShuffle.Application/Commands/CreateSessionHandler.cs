@@ -17,25 +17,26 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
 
     public async Task<CreateSessionResponse> Handle(CreateSessionRequest request, CancellationToken cancellationToken)
     {
+        var creationDate = DateTime.UtcNow;
         var userSession = new UserSession
         {
             Name = request.Name,
-            CreationDate = DateTime.UtcNow,
-            SessionGuid = Guid.NewGuid()
+            CreationDate = creationDate,
+            SessionGuid = Guid.NewGuid(),
+            LastSeenDate = creationDate
         };
 
         var createdUserSessionEntity = await _appDbContext.UserSessions.DbSet.AddAsync(userSession, cancellationToken);
         var createdUserSession = createdUserSessionEntity.Entity;
 
-        var token = _authService.CreateJsonWebTokenFromUserSession(createdUserSession);
+        var identity = _authService.CreateUserIdentityFromUserSession(createdUserSession);
+        var token = _authService.CreateJsonWebTokenFromUserIdentity(identity);
 
         var ret = new CreateSessionResponse
         {
             UserSession = createdUserSession,
             JsonWebToken = token
         };
-
-        await _appDbContext.SaveChangesAsync(cancellationToken);
 
         return ret;
     }

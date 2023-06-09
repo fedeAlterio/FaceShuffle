@@ -12,7 +12,6 @@ internal class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
             .HasMaxLength(UserSession.NameMaximumLength);
 
         builder.HasIndex(x => x.Name)
-            .IsClustered()
             .IsUnique();
     }
 }

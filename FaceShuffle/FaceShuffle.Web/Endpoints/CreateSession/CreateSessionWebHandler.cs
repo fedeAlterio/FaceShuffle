@@ -1,4 +1,5 @@
-﻿using FaceShuffle.Application.Commands;
+﻿using FaceShuffle.Application.Abstractions;
+using FaceShuffle.Application.Commands;
 using FaceShuffle.Web.DTO;
 using MediatR;
 
@@ -6,9 +7,9 @@ namespace FaceShuffle.Web.Endpoints.CreateSession;
 
 public class CreateSessionWebHandler : IRequestHandler<CreateSessionWebRequest, CreateSessionWebResponse>
 {
-    private readonly IRequestHandler<CreateSessionRequest, CreateSessionResponse> _handler;
+    private readonly IRequestSender<CreateSessionRequest, CreateSessionResponse> _handler;
 
-    public CreateSessionWebHandler(IRequestHandler<CreateSessionRequest, CreateSessionResponse> handler)
+    public CreateSessionWebHandler(IRequestSender<CreateSessionRequest, CreateSessionResponse> handler)
     {
         _handler = handler;
     }
@@ -20,7 +21,7 @@ public class CreateSessionWebHandler : IRequestHandler<CreateSessionWebRequest, 
             Name = webRequest.Name,
         };
 
-        var response = await _handler.Handle(request, cancellationToken);
+        var response = await _handler.Send(request, cancellationToken);
 
         var webResponse = new CreateSessionWebResponse
         {

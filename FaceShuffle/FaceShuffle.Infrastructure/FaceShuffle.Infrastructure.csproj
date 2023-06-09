@@ -19,4 +19,8 @@
     <ProjectReference Include="..\FaceShuffle.Models\FaceShuffle.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\Migrations\" />
+  </ItemGroup>
+
 </Project>

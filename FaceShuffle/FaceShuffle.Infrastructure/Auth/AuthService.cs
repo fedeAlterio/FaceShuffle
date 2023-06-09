@@ -16,13 +16,8 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public string CreateJsonWebTokenFromUserSession(UserSession userSession)
+    public string CreateJsonWebTokenFromUserIdentity(UserIdentity userIdentity)
     {
-        var userIdentity = new UserIdentity
-        {
-            Name = userSession.Name
-        };
-
         var claims = ClaimsFromUserIdentity(userIdentity);
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
@@ -30,6 +25,14 @@ public class AuthService : IAuthService
         var tokenDescriptor = new JwtSecurityToken(_configuration.Issuer, _configuration.Audience, claims,
             expires: DateTime.Now.AddMinutes(_configuration.MinutesBeforeExpiration), signingCredentials: credentials);
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+    }
+
+    public UserIdentity CreateUserIdentityFromUserSession(UserSession userSession)
+    {
+        return new()
+        {
+            Name = userSession.Name,
+        };
     }
 
 
@@ -43,7 +46,7 @@ public class AuthService : IAuthService
         return claims;
     }
 
-    public UserIdentity GetUserIdentity(IIdentity? identity)
+    public UserIdentity UserIdentityFromPrincipalIdentity(IIdentity? identity)
     {
         var claimsIdentity = identity as ClaimsIdentity
                              ?? throw new InvalidOperationException(

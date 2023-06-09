@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceShuffle.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RawAppDbContext))]
-    [Migration("20230527173352_UniqueIndexOnUserSession")]
-    partial class UniqueIndexOnUserSession
+    [Migration("20230609175550_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,9 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastSeenDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")

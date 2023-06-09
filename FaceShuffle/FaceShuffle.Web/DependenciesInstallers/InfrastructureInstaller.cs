@@ -1,6 +1,7 @@
 ﻿using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Application.Abstractions.Repositories;
+using FaceShuffle.Infrastructure;
 using FaceShuffle.Infrastructure.Auth;
 using FaceShuffle.Infrastructure.Persistence;
 using FaceShuffle.Infrastructure.Persistence.Repositories;
@@ -20,6 +21,8 @@ public static class InfrastructureInstaller
     static void AddServices(this IServiceCollection @this)
     {
         @this.AddSingleton<IAuthService, AuthService>();
+        @this.AddTransient(typeof(IRequestSender<,>), typeof(MediatRRequestSender<,>));
+        @this.AddScoped<IDomainEventsCollector, DomainEventsCollector>();
     }
 
     static void AddDbContext(this IServiceCollection @this, IConfiguration configuration)
