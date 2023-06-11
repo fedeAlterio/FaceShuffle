@@ -14,7 +14,7 @@ public class UserSessionDto
     {
         var ret = new UserSessionDto
         {
-            SessionGuid = userSession.SessionGuid,
+            Username = userSession.Username,
             CreationDate = userSession.CreationDate,
             Name = userSession.Name
         };
@@ -22,7 +22,7 @@ public class UserSessionDto
         return ret;
     }
 
-    public required Guid SessionGuid { get; set; }
-    public required string Name { get; set; }
-    public required DateTime CreationDate { get; set; }
+    public required string Username { get; init; }
+    public required string Name { get; init; }
+    public required DateTime CreationDate { get; init; }
 }

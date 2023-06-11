@@ -11,6 +11,12 @@ internal class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
         builder.Property(p => p.Name)
             .HasMaxLength(UserSession.NameMaximumLength);
 
+        builder.Property(p => p.Username)
+            .IsRequired();
+
+        builder.HasIndex(p => p.Username)
+            .IsUnique();
+
         builder.HasIndex(x => x.Name)
             .IsUnique();
     }

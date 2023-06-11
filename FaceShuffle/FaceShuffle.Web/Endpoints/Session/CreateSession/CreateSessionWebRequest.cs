@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace FaceShuffle.Web.Endpoints.CreateSession;
+namespace FaceShuffle.Web.Endpoints.Session.CreateSession;
 
 public class CreateSessionWebRequest : IRequest<CreateSessionWebResponse>
 {

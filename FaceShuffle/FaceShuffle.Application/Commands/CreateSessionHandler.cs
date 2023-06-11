@@ -2,6 +2,7 @@
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace FaceShuffle.Application.Commands;
 internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, CreateSessionResponse>
@@ -18,11 +19,17 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
     public async Task<CreateSessionResponse> Handle(CreateSessionRequest request, CancellationToken cancellationToken)
     {
         var creationDate = DateTime.UtcNow;
+        var sameNameCount = await _appDbContext.UserSessions.DbSet
+            .Where(x => x.Name == request.Name)
+            .CountAsync(cancellationToken);
+
+        var username = $"{request.Name}_{sameNameCount + 1}";
+
         var userSession = new UserSession
         {
             Name = request.Name,
             CreationDate = creationDate,
-            SessionGuid = Guid.NewGuid(),
+            Username = username,
             LastSeenDate = creationDate
         };
 

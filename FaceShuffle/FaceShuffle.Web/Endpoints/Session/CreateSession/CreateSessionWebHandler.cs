@@ -3,7 +3,7 @@ using FaceShuffle.Application.Commands;
 using FaceShuffle.Web.DTO;
 using MediatR;
 
-namespace FaceShuffle.Web.Endpoints.CreateSession;
+namespace FaceShuffle.Web.Endpoints.Session.CreateSession;
 
 public class CreateSessionWebHandler : IRequestHandler<CreateSessionWebRequest, CreateSessionWebResponse>
 {

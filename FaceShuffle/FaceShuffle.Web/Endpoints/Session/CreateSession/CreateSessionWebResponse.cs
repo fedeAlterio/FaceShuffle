@@ -1,6 +1,6 @@
 ﻿using FaceShuffle.Web.DTO;
 
-namespace FaceShuffle.Web.Endpoints.CreateSession;
+namespace FaceShuffle.Web.Endpoints.Session.CreateSession;
 
 public class CreateSessionWebResponse
 {

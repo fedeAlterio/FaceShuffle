@@ -4,26 +4,31 @@ using System.Security.Principal;
 using System.Text;
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Models;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FaceShuffle.Infrastructure.Auth;
 public class AuthService : IAuthService
 {
-    private readonly JwtConfiguration _configuration;
+    private readonly IOptions<JwtConfiguration> _jwtConfiguration;
+    private readonly IOptions<UserSessionConfiguration> _userSessionConfiguration;
+    private const string ClaimName = ClaimTypes.Name;
+    private const string ClaimUsername = "ClaimUsername";
 
-    public AuthService(JwtConfiguration configuration)
+    public AuthService(IOptions<JwtConfiguration> jwtConfiguration, IOptions<UserSessionConfiguration> userSessionConfiguration)
     {
-        _configuration = configuration;
+        _jwtConfiguration = jwtConfiguration;
+        _userSessionConfiguration = userSessionConfiguration;
     }
 
     public string CreateJsonWebTokenFromUserIdentity(UserIdentity userIdentity)
     {
         var claims = ClaimsFromUserIdentity(userIdentity);
 
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Value.Key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-        var tokenDescriptor = new JwtSecurityToken(_configuration.Issuer, _configuration.Audience, claims,
-            expires: DateTime.Now.AddMinutes(_configuration.MinutesBeforeExpiration), signingCredentials: credentials);
+        var tokenDescriptor = new JwtSecurityToken(_jwtConfiguration.Value.Issuer, _jwtConfiguration.Value.Audience, claims,
+            expires: DateTime.Now.AddMinutes(_userSessionConfiguration.Value.MinutesBeforeExpiration), signingCredentials: credentials);
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
     }
 
@@ -32,6 +37,7 @@ public class AuthService : IAuthService
         return new()
         {
             Name = userSession.Name,
+            Username = userSession.Username
         };
     }
 
@@ -40,7 +46,8 @@ public class AuthService : IAuthService
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, userIdentity.Name),
+            new Claim(ClaimName, userIdentity.Name),
+            new Claim(ClaimUsername, userIdentity.Username)
         };
 
         return claims;
@@ -52,11 +59,13 @@ public class AuthService : IAuthService
                              ?? throw new InvalidOperationException(
                                  $"Can't extract user identity: Expected claims identity but found [{identity?.GetType() }]");
 
-        var name = claimsIdentity.FindFirst(ClaimTypes.Name)!.Value;
+        var name = claimsIdentity.FindFirst(ClaimName)!.Value;
+        var username = claimsIdentity.FindFirst(ClaimUsername)!.Value;
 
         return new()
         {
-            Name = name
+            Name = name,
+            Username = username
         };
     }
 }

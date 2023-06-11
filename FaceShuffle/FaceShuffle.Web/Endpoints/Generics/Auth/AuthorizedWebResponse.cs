@@ -1,6 +1,6 @@
-﻿namespace FaceShuffle.Web.Endpoints.Utilities.Auth;
+﻿namespace FaceShuffle.Web.Endpoints.Generics.Auth;
 
-public record AuthorizedResponse<T>
+public record AuthorizedWebResponse<T>
 {
     public required string Token { get; init; }
     public required T Data { get; init; }

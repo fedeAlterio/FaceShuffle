@@ -12,5 +12,6 @@ public static class MediatRInstaller
 
         @this.AddScoped(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkPipelineBehavior<,>));
         @this.AddScoped(typeof(IPipelineBehavior<,>), typeof(PublishDomainEventsPipelineBehavior<,>));
+        @this.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
     }
 }

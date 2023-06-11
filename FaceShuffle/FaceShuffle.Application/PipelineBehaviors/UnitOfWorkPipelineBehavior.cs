@@ -2,7 +2,7 @@
 using MediatR;
 
 namespace FaceShuffle.Application.PipelineBehaviors;
-public class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IUnitOfWorkRequest
+public class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly IAppDbContext _appDbContext;
     private int _concurrentCalls;

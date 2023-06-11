@@ -2,6 +2,7 @@
 using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Infrastructure.Auth;
+using FaceShuffle.Web.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using FaceShuffle.Web.Utilities;
@@ -12,8 +13,13 @@ public static class AuthenticationInstaller
 {
     public static void AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtConfiguration = configuration.Get<JwtConfiguration>("JWT");
-        services.AddSingleton(jwtConfiguration);
+        var userSessionConfigurationRaw = configuration.GetSection(ConfigurationSections.UserSession);
+        var jwtConfigurationRaw = configuration.GetSection(ConfigurationSections.Jwt);
+
+        var jwtConfiguration = configuration.Get<JwtConfiguration>(ConfigurationSections.Jwt);
+        services.Configure<JwtConfiguration>(jwtConfigurationRaw);
+        services.Configure<UserSessionConfiguration>(userSessionConfigurationRaw);
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters

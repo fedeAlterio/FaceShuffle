@@ -1,6 +1,6 @@
 using FaceShuffle.Web.DependenciesInstallers;
-using FaceShuffle.Web.Endpoints.Utilities;
-using FaceShuffle.Web.Endpoints.Utilities.Auth;
+using FaceShuffle.Web.Endpoints;
+using FaceShuffle.Web.Endpoints.Generics.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +13,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddSwagger();
 builder.Services.AddSwaggerGen();
-builder.Services.AddLazyServices();
-builder.Services.AddScoped(typeof(AuthorizedRequestHandler<,>), typeof(AuthorizedRequestHandler<,>));
+builder.Services.AddScoped(typeof(AuthorizedWebRequestHandler<,>), typeof(AuthorizedWebRequestHandler<,>));
 
 var app = builder.Build();
 
@@ -29,5 +28,5 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
-app.AddEndpoints();
+app.MapEndpoints();
 await app.RunAsync();

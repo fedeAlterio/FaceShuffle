@@ -1,7 +1,6 @@
 ﻿using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Models.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace FaceShuffle.Application.EventHandlers.UserAuthenticated;
 internal class UpdateUserSessionLastSeenDate : INotificationHandler<UserAuthenticatedEvent>
@@ -15,8 +14,9 @@ internal class UpdateUserSessionLastSeenDate : INotificationHandler<UserAuthenti
 
     public async Task Handle(UserAuthenticatedEvent notification, CancellationToken cancellationToken)
     {
-        await _appDbContext.UserSessions.DbSet
-            .Where(session => session.Name == notification.UserIdentity.Name)
-            .ExecuteUpdateAsync(x => x.SetProperty(session => session.LastSeenDate, DateTime.UtcNow), CancellationToken.None);
+        var userSession =
+            await _appDbContext.UserSessions.GetActiveSessionByName(notification.UserIdentity.Name, cancellationToken);
+
+        userSession.LastSeenDate = DateTime.UtcNow;
     }
 }

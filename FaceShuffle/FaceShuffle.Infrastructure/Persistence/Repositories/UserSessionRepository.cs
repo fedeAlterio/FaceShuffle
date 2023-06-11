@@ -13,4 +13,8 @@ public class UserSessionRepository : IUserSessionRepository
     }
 
     public DbSet<UserSession> DbSet => _dbContext.UserSessions;
+    public async Task<UserSession> GetActiveSessionByName(string name, CancellationToken cancellationToken)
+    {
+        return await _dbContext.UserSessions.FirstAsync(x => x.Name == name, cancellationToken);
+    }
 }

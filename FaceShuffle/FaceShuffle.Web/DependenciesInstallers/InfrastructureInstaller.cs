@@ -14,8 +14,11 @@ public static class InfrastructureInstaller
     public static void AddInfrastructure(this IServiceCollection @this, IConfiguration configuration)
     {
         @this.AddRepositories();
-        @this.AddDbContext(configuration);
+        @this.AddDbContext(configuration); 
         @this.AddServices();
+        @this.AddLazyServices();
+        @this.AddOptionalDependencies();
+        @this.AddFluentValidation();
     }
 
     static void AddServices(this IServiceCollection @this)
