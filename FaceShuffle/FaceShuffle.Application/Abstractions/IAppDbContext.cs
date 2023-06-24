@@ -4,5 +4,6 @@ namespace FaceShuffle.Application.Abstractions;
 public interface IAppDbContext
 {
     IUserSessionRepository UserSessions { get; }
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    Task ApplyMigrations(CancellationToken cancellationToken);
 }

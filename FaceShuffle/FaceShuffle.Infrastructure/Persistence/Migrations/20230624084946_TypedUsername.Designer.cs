@@ -4,6 +4,7 @@ using FaceShuffle.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceShuffle.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RawAppDbContext))]
-    partial class RawAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230624084946_TypedUsername")]
+    partial class TypedUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

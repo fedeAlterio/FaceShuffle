@@ -1,4 +1,5 @@
 ﻿using FaceShuffle.Models;
+using FaceShuffle.Models.Session;
 using System.Security.Principal;
 
 namespace FaceShuffle.Application.Abstractions.Auth;

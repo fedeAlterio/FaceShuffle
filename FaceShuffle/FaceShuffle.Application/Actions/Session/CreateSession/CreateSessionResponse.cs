@@ -1,6 +1,6 @@
-﻿using FaceShuffle.Models;
+﻿using FaceShuffle.Models.Session;
 
-namespace FaceShuffle.Application.Commands;
+namespace FaceShuffle.Application.Actions.Session.CreateSession;
 public class CreateSessionResponse
 {
     public required UserSession UserSession { get; init; }

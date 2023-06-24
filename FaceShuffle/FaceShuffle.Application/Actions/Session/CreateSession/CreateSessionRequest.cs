@@ -1,8 +1,9 @@
 ﻿using FaceShuffle.Application.PipelineBehaviors;
+using FaceShuffle.Models.Session;
 using MediatR;
 
-namespace FaceShuffle.Application.Commands;
+namespace FaceShuffle.Application.Actions.Session.CreateSession;
 public class CreateSessionRequest : IRequest<CreateSessionResponse>, IUnitOfWorkRequest
 {
-    public required string Name { get; init; }
+    public required Username Username { get; init; }
 }

@@ -1,5 +1,5 @@
 ﻿using FaceShuffle.Application.Abstractions;
-using FaceShuffle.Application.Queries;
+using FaceShuffle.Application.Actions.Secret.GetSecret;
 using MediatR;
 
 namespace FaceShuffle.Web.Endpoints.Secret;

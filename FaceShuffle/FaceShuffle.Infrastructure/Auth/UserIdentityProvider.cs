@@ -17,7 +17,7 @@ public class UserIdentityProvider : IUserIdentityProvider
     private UserIdentity? _userIdentity;
     public UserIdentity UserIdentity
     {
-        get => _userIdentity ?? throw new ExceptionBase("Authentication is needed!");
+        get => _userIdentity ?? throw new AppException("Authentication is needed!");
         set
         {
             if (EqualityComparer<UserIdentity>.Default.Equals(_userIdentity, value))

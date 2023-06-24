@@ -1,5 +1,4 @@
-﻿using FaceShuffle.Application.Extensions;
-using FaceShuffle.Models;
+﻿using FaceShuffle.Models.Session.Validators;
 using FluentValidation;
 
 namespace FaceShuffle.Web.Endpoints.Session.CreateSession;
@@ -8,9 +7,6 @@ public class CreateSessionWebRequestValidator : AbstractValidator<CreateSessionW
 {
     public CreateSessionWebRequestValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .NotWhiteSpaces().WithMessage($"Ensure {nameof(CreateSessionWebRequest.Name)} does not contains whitespaces")
-            .MaximumLength(UserSession.NameMaximumLength);  
+        RuleFor(x => x.Username).IsUserSessionUsername();
     }
 }

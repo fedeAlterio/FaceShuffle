@@ -1,5 +1,6 @@
 ﻿using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Application.Abstractions.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FaceShuffle.Infrastructure.Persistence;
@@ -20,5 +21,10 @@ public class AppDbContext : IAppDbContext
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task ApplyMigrations(CancellationToken cancellationToken)
+    {
+        await _dbContext.Database.MigrateAsync(cancellationToken);
     }
 }

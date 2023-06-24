@@ -1,5 +1,5 @@
 ﻿using FaceShuffle.Application.Abstractions;
-using FaceShuffle.Application.Commands;
+using FaceShuffle.Application.Actions.Session.CreateSession;
 using FaceShuffle.Web.DTO;
 using MediatR;
 
@@ -18,7 +18,7 @@ public class CreateSessionWebHandler : IRequestHandler<CreateSessionWebRequest, 
     {
         var request = new CreateSessionRequest
         {
-            Name = webRequest.Name,
+            Username = new(webRequest.Username),
         };
 
         var response = await _handler.Send(request, cancellationToken);

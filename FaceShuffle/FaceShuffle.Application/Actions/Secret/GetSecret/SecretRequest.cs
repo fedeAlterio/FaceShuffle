@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace FaceShuffle.Application.Queries;
+namespace FaceShuffle.Application.Actions.Secret.GetSecret;
 public class SecretRequest : IRequest<SecretResponse>
 {
 }

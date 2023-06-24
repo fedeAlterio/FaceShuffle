@@ -4,6 +4,7 @@ using System.Security.Principal;
 using System.Text;
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Models;
+using FaceShuffle.Models.Session;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -12,7 +13,6 @@ public class AuthService : IAuthService
 {
     private readonly IOptions<JwtConfiguration> _jwtConfiguration;
     private readonly IOptions<UserSessionConfiguration> _userSessionConfiguration;
-    private const string ClaimName = ClaimTypes.Name;
     private const string ClaimUsername = "ClaimUsername";
 
     public AuthService(IOptions<JwtConfiguration> jwtConfiguration, IOptions<UserSessionConfiguration> userSessionConfiguration)
@@ -36,8 +36,7 @@ public class AuthService : IAuthService
     {
         return new()
         {
-            Name = userSession.Name,
-            Username = userSession.Username
+            Username = userSession.Username.Value
         };
     }
 
@@ -46,7 +45,6 @@ public class AuthService : IAuthService
     {
         var claims = new[]
         {
-            new Claim(ClaimName, userIdentity.Name),
             new Claim(ClaimUsername, userIdentity.Username)
         };
 
@@ -59,12 +57,10 @@ public class AuthService : IAuthService
                              ?? throw new InvalidOperationException(
                                  $"Can't extract user identity: Expected claims identity but found [{identity?.GetType() }]");
 
-        var name = claimsIdentity.FindFirst(ClaimName)!.Value;
         var username = claimsIdentity.FindFirst(ClaimUsername)!.Value;
 
         return new()
         {
-            Name = name,
             Username = username
         };
     }

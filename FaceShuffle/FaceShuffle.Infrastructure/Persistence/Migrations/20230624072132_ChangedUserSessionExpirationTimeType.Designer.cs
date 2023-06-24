@@ -4,6 +4,7 @@ using FaceShuffle.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceShuffle.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RawAppDbContext))]
-    partial class RawAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230624072132_ChangedUserSessionExpirationTimeType")]
+    partial class ChangedUserSessionExpirationTimeType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FaceShuffle.Models.Session.UserSession", b =>
+            modelBuilder.Entity("FaceShuffle.Models.UserSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,17 +39,25 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("LastSeenDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("MinutesBeforeExpiration")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<Guid>("SessionGuid")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("TimeExpiration")
+                        .HasColumnType("time");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("Username")
                         .IsUnique();

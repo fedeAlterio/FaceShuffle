@@ -1,4 +1,4 @@
-﻿using FaceShuffle.Models;
+﻿using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,16 +8,12 @@ internal class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
     public void Configure(EntityTypeBuilder<UserSession> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.Property(p => p.Name)
-            .HasMaxLength(UserSession.NameMaximumLength);
 
-        builder.Property(p => p.Username)
+        builder.Property(x => x.Username)
+            .HasConversion(x => x.Value, x => new (x))
             .IsRequired();
 
         builder.HasIndex(p => p.Username)
-            .IsUnique();
-
-        builder.HasIndex(x => x.Name)
             .IsUnique();
     }
 }

@@ -1,4 +1,4 @@
-﻿using FaceShuffle.Models;
+﻿using FaceShuffle.Models.Session;
 
 namespace FaceShuffle.Web.DTO;
 
@@ -14,15 +14,13 @@ public class UserSessionDto
     {
         var ret = new UserSessionDto
         {
-            Username = userSession.Username,
+            Username = userSession.Username.Value,
             CreationDate = userSession.CreationDate,
-            Name = userSession.Name
         };
 
         return ret;
     }
 
     public required string Username { get; init; }
-    public required string Name { get; init; }
     public required DateTime CreationDate { get; init; }
 }

@@ -11,6 +11,7 @@ internal static class EndpointsInstaller
     {
         var rootGroup = endpointsBuilder
             .MapGroup("")
+            .AddEndpointFilter<FallbackExceptionFilter>()
             .AddEndpointFilter<FluentValidationExceptionFilter>();
 
         var serviceProvider = endpointsBuilder.ServiceProvider;

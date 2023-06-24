@@ -1,8 +1,8 @@
 ﻿using FaceShuffle.Models;
 using MediatR;
 
-namespace FaceShuffle.Application.Queries;
-public class SecretRequestHandler :IRequestHandler<SecretRequest, SecretResponse>
+namespace FaceShuffle.Application.Actions.Secret.GetSecret;
+public class SecretRequestHandler : IRequestHandler<SecretRequest, SecretResponse>
 {
     private readonly UserIdentity _userIdentity;
 
@@ -16,7 +16,7 @@ public class SecretRequestHandler :IRequestHandler<SecretRequest, SecretResponse
         await Task.CompletedTask;
         return new()
         {
-            Secret = $"Secret For {_userIdentity.Name}"
+            Secret = $"Secret For {_userIdentity.Username}"
         };
     }
 }

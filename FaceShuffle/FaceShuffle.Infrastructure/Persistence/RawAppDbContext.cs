@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using FaceShuffle.Models;
+using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
 
 namespace FaceShuffle.Infrastructure.Persistence;
@@ -7,7 +7,6 @@ public class RawAppDbContext : DbContext
 {
     public RawAppDbContext(DbContextOptions<RawAppDbContext> options) : base(options)
     {
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
