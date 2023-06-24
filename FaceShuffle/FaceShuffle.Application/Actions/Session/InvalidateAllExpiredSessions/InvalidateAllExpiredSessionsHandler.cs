@@ -22,13 +22,13 @@ public class InvalidateAllExpiredSessionsHandler : IRequestHandler<InvalidateAll
         var sessions = _appDbContext.UserSessions;
         var expiredSessions = await sessions.DbSet
             .Where(x => x.LastSeenDate.AddMinutes(x.MinutesBeforeExpiration) < DateTime.UtcNow)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken);    
 
         foreach (var expiredSession in expiredSessions)
         {
             var invalidateRequest = new InvalidateSessionRequest
             {
-                SessionId = expiredSession.Id
+                UserSessionId = expiredSession.Id
             };
 
             await _invalidateSession.Send(invalidateRequest, cancellationToken);

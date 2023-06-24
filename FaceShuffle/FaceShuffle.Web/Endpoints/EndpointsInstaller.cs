@@ -1,5 +1,5 @@
 ﻿using FaceShuffle.Web.Endpoints.Abstractions;
-using FaceShuffle.Web.Endpoints.EndpointFilters;
+using FaceShuffle.Web.Endpoints.EndpointFilters.ExceptionsFilters;
 using FaceShuffle.Web.Endpoints.Secret;
 using FaceShuffle.Web.Endpoints.Session;
 
@@ -12,7 +12,8 @@ internal static class EndpointsInstaller
         var rootGroup = endpointsBuilder
             .MapGroup("")
             .AddEndpointFilter<FallbackExceptionFilter>()
-            .AddEndpointFilter<FluentValidationExceptionFilter>();
+            .AddEndpointFilter<FluentValidationExceptionFilter>()
+            .AddEndpointFilter<UserReadableAppExceptionFilter>();
 
         var serviceProvider = endpointsBuilder.ServiceProvider;
 

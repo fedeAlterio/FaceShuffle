@@ -14,7 +14,7 @@ public class InvalidateSessionHandler : IRequestHandler<InvalidateSessionRequest
     public async Task<InvalidateSessionResponse> Handle(InvalidateSessionRequest request, CancellationToken cancellationToken)
     {
         var userSessions = _appDbContext.UserSessions;
-        var userSession = await userSessions.FindSessionById(request.SessionId, cancellationToken);
+        var userSession = await userSessions.FindSessionById(request.UserSessionId, cancellationToken);
         userSessions.DbSet.Remove(userSession);
         return new();
     }

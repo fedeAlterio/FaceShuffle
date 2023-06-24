@@ -19,7 +19,7 @@ public class UserSessionRepository : IUserSessionRepository
         return await DbSet.FirstAsync(x => x.Username == username, cancellationToken);
     }
 
-    public Task<UserSession> FindSessionById(int userSessionId, CancellationToken cancellationToken)
+    public Task<UserSession> FindSessionById(UserSessionId userSessionId, CancellationToken cancellationToken)
     {
         return DbSet.FindAsyncOrThrow(new object[] { userSessionId }, cancellationToken);
     }

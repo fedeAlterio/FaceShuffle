@@ -1,7 +1,8 @@
-﻿using MediatR;
+﻿using FaceShuffle.Models.Session;
+using MediatR;
 
 namespace FaceShuffle.Application.Actions.Session.InvalidateSession;
 public class InvalidateSessionRequest : IRequest<InvalidateSessionResponse>
 {
-    public required int SessionId { get; init; }
+    public required UserSessionId UserSessionId { get; init; }
 }

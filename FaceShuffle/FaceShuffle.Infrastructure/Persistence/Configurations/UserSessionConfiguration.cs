@@ -9,6 +9,11 @@ internal class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, x => new(x))
+            .ValueGeneratedOnAdd();
+
+
         builder.Property(x => x.Username)
             .HasConversion(x => x.Value, x => new (x))
             .IsRequired();

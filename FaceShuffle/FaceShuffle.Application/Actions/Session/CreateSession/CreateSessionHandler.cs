@@ -1,5 +1,6 @@
 ﻿using FaceShuffle.Application.Abstractions;
 using FaceShuffle.Application.Abstractions.Auth;
+using FaceShuffle.Application.Extensions;
 using FaceShuffle.Models.Session;
 using MediatR;
 using Microsoft.Extensions.Options;
@@ -14,12 +15,12 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
     public CreateSessionHandler(
         IAppDbContext appDbContext, 
         IAuthService authService,
-        IOptions<UserSessionConfiguration> userSessionConfiguration
+        IOptionsMonitor<UserSessionConfiguration> userSessionConfiguration
         )
     {
         _appDbContext = appDbContext;
         _authService = authService;
-        _userSessionConfiguration = userSessionConfiguration.Value;
+        _userSessionConfiguration = userSessionConfiguration.CurrentValue;
     }
 
     public async Task<CreateSessionResponse> Handle(CreateSessionRequest request, CancellationToken cancellationToken)
@@ -35,6 +36,7 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
             MinutesBeforeExpiration = _userSessionConfiguration.MinutesBeforeExpiration
         };
 
+        await _appDbContext.UserSessions.ThrowIfUsernameExists(request.Username, cancellationToken);
         
         var createdUserSessionEntity = await _appDbContext.UserSessions.DbSet.AddAsync(userSession, cancellationToken);
         var createdUserSession = createdUserSessionEntity.Entity;

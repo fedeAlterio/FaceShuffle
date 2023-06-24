@@ -18,8 +18,9 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SessionGuid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MinutesBeforeExpiration = table.Column<int>(type: "int", nullable: false),
                     LastSeenDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -28,9 +29,9 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSessions_Name",
+                name: "IX_UserSessions_Username",
                 table: "UserSessions",
-                column: "Name",
+                column: "Username",
                 unique: true);
         }
 

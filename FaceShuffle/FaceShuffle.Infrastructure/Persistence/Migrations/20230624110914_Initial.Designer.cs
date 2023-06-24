@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FaceShuffle.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RawAppDbContext))]
-    [Migration("20230618154233_SessionGuid")]
-    partial class SessionGuid
+    [Migration("20230624110914_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("FaceShuffle.Models.UserSession", b =>
+            modelBuilder.Entity("FaceShuffle.Models.Session.UserSession", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,11 +42,6 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                     b.Property<int>("MinutesBeforeExpiration")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
                     b.Property<Guid>("SessionGuid")
                         .HasColumnType("uniqueidentifier");
 
@@ -55,9 +50,6 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("Username")
                         .IsUnique();

@@ -2,7 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 
-namespace FaceShuffle.Web.Endpoints.EndpointFilters;
+namespace FaceShuffle.Web.Endpoints.EndpointFilters.ExceptionsFilters;
 
 public class FluentValidationExceptionFilter : IEndpointFilter
 {

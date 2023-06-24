@@ -1,4 +1,4 @@
-﻿namespace FaceShuffle.Web.Endpoints.EndpointFilters;
+﻿namespace FaceShuffle.Web.Endpoints.EndpointFilters.ExceptionsFilters;
 
 public class FallbackExceptionFilter : IEndpointFilter
 {
