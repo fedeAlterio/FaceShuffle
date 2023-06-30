@@ -7,59 +7,80 @@ using FaceShuffle.Application.Extensions;
 using FaceShuffle.Models.PendingJobs;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Polly;
 
 namespace FaceShuffle.Application.Actions.PendingJobs.ExecutePendingJob;
 public class ExecutePendingJobHandler : IRequestHandler<ExecutePendingJobRequest, ExecutePendingJobResponse>
 {
-    record PendingJobRequestInfo(Type RequestType, Type PayloadType, PropertyInfo PayloadPropertyInfo);
+    record PendingJobRequestInfo(Type RequestType,
+        Type PayloadType,
+        PropertyInfo PayloadPropertyInfo,
+        Policy Policy);
+
     private static readonly ImmutableDictionary<PendingJobType, PendingJobRequestInfo> HandlersByPendingJobType = GetHandlersByPendingJobType();
-    private static Policy _pendingJobHandlerRetryPolicy = GetExecutePendingJobPolicy();
     private readonly IServiceProvider _serviceProvider;
     private readonly IAppDbContext _appDbContext;
+    private readonly ILogger<ExecutePendingJobHandler> _logger;
 
-    public ExecutePendingJobHandler(IServiceProvider serviceProvider, IAppDbContext appDbContext)
+    public ExecutePendingJobHandler(IServiceProvider serviceProvider,
+        IAppDbContext appDbContext,
+        ILogger<ExecutePendingJobHandler> logger)
     {
         _serviceProvider = serviceProvider;
         _appDbContext = appDbContext;
+        _logger = logger;
     }
 
     public async Task<ExecutePendingJobResponse> Handle(ExecutePendingJobRequest request, CancellationToken cancellationToken)
     {
         var handlerRequestInfo = HandlersByPendingJobType[request.PendingJob.Type];
         var payload = JsonSerializer.Deserialize(request.PendingJob.Payload, handlerRequestInfo.PayloadType);
-        var handlerRequest = Activator.CreateInstance(handlerRequestInfo.RequestType)!;
+        var handlerRequest = (IPendingJobRequest)Activator.CreateInstance(handlerRequestInfo.RequestType)!;
         handlerRequestInfo.PayloadPropertyInfo.SetValue(handlerRequest, payload);
 
         var mediator = _serviceProvider.GetRequiredService<IMediator>();
 
-        await _pendingJobHandlerRetryPolicy.Execute(async () =>
+        var pendingJob = request.PendingJob;
+        _logger.LogInformation("Executing pending job {Job}", pendingJob);
+
+        try
         {
-            await mediator.Send(handlerRequest, cancellationToken);
-            _appDbContext.PendingJobs.DbSet.Remove(request.PendingJob);
+            await handlerRequestInfo.Policy.Execute(async () =>
+            {
+                await mediator.Send(handlerRequest, cancellationToken);
+                _appDbContext.PendingJobs.DbSet.Remove(request.PendingJob);
+                await _appDbContext.SaveChangesAsync(cancellationToken);
+            });
+        }
+        catch (Exception e)
+        {
+            pendingJob.PendingJobStatus = PendingJobStatus.Failed;
             await _appDbContext.SaveChangesAsync(cancellationToken);
-        });
+            _logger.LogError(e, "Failed to execute pending job {Job}", request.PendingJob);
+            throw;
+        }
 
         return new();
     }
 
-    static Policy GetExecutePendingJobPolicy()
-    {
-        return Policy
-            .Handle<Exception>()
-            .WaitAndRetry(new[] { TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(3) });
-    }
-
     private static ImmutableDictionary<PendingJobType, PendingJobRequestInfo> GetHandlersByPendingJobType()
     {
+        object? GetStaticPropertyValue(Type requestType, string propertyName)
+        {
+            return requestType.GetProperty(propertyName)!.GetMethod!.Invoke(null, Array.Empty<object>());
+        }
+
         return (from requestType in typeof(ExecutePendingJobHandler).Assembly.GetAllTypesImplementingOpenGenericType(typeof(IPendingJobRequest<>))
-                from member in requestType.GetProperties()
-                where member.Name == nameof(IPendingJobRequest<Unit>.PendingJobType)
-                let pendingJobType = (PendingJobType)member.GetMethod!.Invoke(null, Array.Empty<object>())!
+                let pendingJobType = (PendingJobType)GetStaticPropertyValue(requestType, nameof(IPendingJobRequest<Unit>.PendingJobType))!
                 let payloadProperty = requestType.GetProperty(nameof(IPendingJobRequest<Unit>.Payload))!
                 let payloadType = payloadProperty.PropertyType!
-                select new { pendingJobType, requestType, payloadType, payloadProperty})
-            .ToImmutableDictionary(x => x.pendingJobType, x => new PendingJobRequestInfo(x.requestType, x.payloadType, x.payloadProperty!));
+                let policy = (Policy) GetStaticPropertyValue(requestType, nameof(IPendingJobRequest<Unit>.PendingJobPolicy))!
+                select new { pendingJobType, requestType, payloadType, payloadProperty, policy })
+            .ToImmutableDictionary(x => x.pendingJobType, x => new PendingJobRequestInfo(x.requestType,
+                x.payloadType,
+                x.payloadProperty!,
+                x.policy));
     }
 
 }

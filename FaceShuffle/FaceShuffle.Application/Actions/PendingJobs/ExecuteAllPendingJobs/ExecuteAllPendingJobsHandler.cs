@@ -33,7 +33,7 @@ public class ExecuteAllPendingJobsHandler : IRequestHandler<ExecuteAllPendingJob
 
     private Task<PendingJob?> GetNextPendingJob(CancellationToken cancellationToken)
     {
-        return _appDbContext.PendingJobs.DbSet.FirstOrDefaultAsync(cancellationToken);
+        return _appDbContext.PendingJobs.DbSet.FirstOrDefaultAsync(x => x.PendingJobStatus == PendingJobStatus.Pending, cancellationToken);
     }
 
     ExecuteAllPendingJobsResponse DefaultResponse() => new();

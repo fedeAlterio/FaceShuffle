@@ -2,6 +2,7 @@
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Application.Actions.PendingJobs;
 using FaceShuffle.Application.Actions.PendingJobs.BackgroundServices;
+using FaceShuffle.Application.Actions.PendingJobs.Configuration;
 using FaceShuffle.Application.Actions.Session.BackgroundServices;
 using FaceShuffle.Application.Configuration;
 using FaceShuffle.Application.Repositories;
@@ -22,7 +23,7 @@ public static class InfrastructureInstaller
         @this.AddDbContext(configuration); 
 
         @this.AddUserSession();
-        @this.AddPendingJobs();
+        @this.AddPendingJobs(configuration);
         @this.AddMediatRServices();
         @this.AddAuthServices();
 
@@ -75,10 +76,11 @@ public static class InfrastructureInstaller
         });
     }
 
-    static void AddPendingJobs(this IServiceCollection @this)
+    static void AddPendingJobs(this IServiceCollection @this, IConfiguration configuration)
     {
         @this.AddScoped<IPendingJobsRepository, PendingJobsRepository>();
         @this.AddScoped<IPendingJobService, PendingJobsService>();
         @this.AddApplicationBackgroundService<ExecutePendingJobsBackgroundService>();
+        @this.Configure<PendingJobsConfiguration>(configuration.GetSection("PendingJobs"));
     }
 }
