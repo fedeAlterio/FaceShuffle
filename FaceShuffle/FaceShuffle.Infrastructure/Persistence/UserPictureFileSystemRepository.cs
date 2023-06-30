@@ -37,7 +37,7 @@ public class UserPictureFileSystemRepository : IUserPicturesRepository
 
         var picturesMetadata = Directory
             .GetFiles(sessionDirectoryPath)
-            .Select(fileName => GetUserMetadataFromFileName(userSessionGuid, fileName));
+            .Select(path => GetUserMetadataFromFileName(userSessionGuid, path));
 
         return Task.FromResult(picturesMetadata);
     }
@@ -105,8 +105,9 @@ public class UserPictureFileSystemRepository : IUserPicturesRepository
         return Path.Combine(GetPicturesDirectoryPathForSession(userPictureMetadata.SessionGuid), GetFileName(userPictureMetadata));
     }
 
-    UserPictureMetadata GetUserMetadataFromFileName(UserSessionGuid userSessionGuid, string rawFileName)
+    UserPictureMetadata GetUserMetadataFromFileName(UserSessionGuid userSessionGuid, string path)
     {
+        var rawFileName = Path.GetFileName(path);
         var metadataSplit = rawFileName.Split('_');
         var pictureGuid = new UserPictureGuid(Guid.Parse(metadataSplit[0]));
         var fileName = new UserPictureFileName(metadataSplit[1]);
