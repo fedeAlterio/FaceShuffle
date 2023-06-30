@@ -14,6 +14,11 @@ public class UnitOfWorkPipelineBehavior<TRequest, TResponse> : IPipelineBehavior
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+        if (request is INotUnitOfWorkRequest)
+        {
+            return await next();
+        }
+
         _concurrentCalls++;
 
         var ret = await next();

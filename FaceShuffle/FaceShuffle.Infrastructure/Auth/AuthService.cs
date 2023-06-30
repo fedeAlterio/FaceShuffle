@@ -4,6 +4,7 @@ using System.Security.Principal;
 using System.Text;
 using FaceShuffle.Application.Abstractions.Auth;
 using FaceShuffle.Models;
+using FaceShuffle.Models.Generic;
 using FaceShuffle.Models.Session;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ public class AuthService : IAuthService
     private readonly IOptions<JwtConfiguration> _jwtConfiguration;
     private readonly IOptions<UserSessionConfiguration> _userSessionConfiguration;
     private const string ClaimUsername = "ClaimUsername";
+    private const string ClaimSessionGuid = "ClaimSessionGuid";
 
     public AuthService(IOptions<JwtConfiguration> jwtConfiguration, IOptions<UserSessionConfiguration> userSessionConfiguration)
     {
@@ -36,7 +38,8 @@ public class AuthService : IAuthService
     {
         return new()
         {
-            Username = userSession.Username.Value
+            Username = userSession.Username,
+            UserSessionGuid = userSession.SessionGuid,
         };
     }
 
@@ -45,23 +48,30 @@ public class AuthService : IAuthService
     {
         var claims = new[]
         {
-            new Claim(ClaimUsername, userIdentity.Username)
+            new Claim(ClaimUsername, userIdentity.Username.Value),
+            new Claim(ClaimSessionGuid, userIdentity.UserSessionGuid.Value.ToString())
         };
 
         return claims;
     }
 
-    public UserIdentity UserIdentityFromPrincipalIdentity(IIdentity? identity)
+    public Optional<UserIdentity> UserIdentityFromPrincipalIdentity(IIdentity? identity)
     {
-        var claimsIdentity = identity as ClaimsIdentity
-                             ?? throw new InvalidOperationException(
-                                 $"Can't extract user identity: Expected claims identity but found [{identity?.GetType() }]");
+        if (identity is not ClaimsIdentity claimsIdentity)
+            return default;
 
-        var username = claimsIdentity.FindFirst(ClaimUsername)!.Value;
+        var username = claimsIdentity.FindFirst(ClaimUsername)?.Value;
+        if(username is null)
+            return default;
 
-        return new()
+        var sessionGuid = claimsIdentity.FindFirst(ClaimSessionGuid)?.Value;
+        if(sessionGuid is null)
+            return default;
+
+        return new UserIdentity
         {
-            Username = username
+            Username = new(username),
+            UserSessionGuid = new(Guid.Parse(sessionGuid))
         };
     }
 }

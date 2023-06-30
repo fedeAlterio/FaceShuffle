@@ -3,5 +3,5 @@
 namespace FaceShuffle.Application.Abstractions;
 public interface IUserIdentityProvider
 {
-    public UserIdentity UserIdentity { get; set; }
+    UserIdentity UserIdentity { get; set; }
 }

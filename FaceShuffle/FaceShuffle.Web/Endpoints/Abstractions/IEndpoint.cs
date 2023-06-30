@@ -2,5 +2,5 @@
 
 internal interface IEndpoint
 {
-    void MapEndpoint(RouteGroupBuilder routeGroupBuilder);
+    void MapEndpoint(RouteGroupBuilder endpoints);
 }   

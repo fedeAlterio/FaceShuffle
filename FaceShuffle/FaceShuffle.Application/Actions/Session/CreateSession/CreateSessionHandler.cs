@@ -15,8 +15,7 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
     public CreateSessionHandler(
         IAppDbContext appDbContext, 
         IAuthService authService,
-        IOptionsMonitor<UserSessionConfiguration> userSessionConfiguration
-        )
+        IOptionsMonitor<UserSessionConfiguration> userSessionConfiguration)
     {
         _appDbContext = appDbContext;
         _authService = authService;
@@ -25,19 +24,21 @@ internal class CreateSessionHandler : IRequestHandler<CreateSessionRequest, Crea
 
     public async Task<CreateSessionResponse> Handle(CreateSessionRequest request, CancellationToken cancellationToken)
     {
-        var creationDate = DateTime.UtcNow;
+        await _appDbContext.UserSessions.ThrowIfUsernameExists(request.Username, cancellationToken);
 
+        var creationDate = DateTime.UtcNow;
         var userSession = new UserSession
         {
-            SessionGuid = Guid.NewGuid(),
+            UserFullName = request.UserFullName,
+            Bio = request.Bio,
+            UserAge = request.UserAge,
+            SessionGuid = new(Guid.NewGuid()),
             CreationDate = creationDate,
             Username = request.Username,
             LastSeenDate = creationDate,
             MinutesBeforeExpiration = _userSessionConfiguration.MinutesBeforeExpiration
         };
 
-        await _appDbContext.UserSessions.ThrowIfUsernameExists(request.Username, cancellationToken);
-        
         var createdUserSessionEntity = await _appDbContext.UserSessions.DbSet.AddAsync(userSession, cancellationToken);
         var createdUserSession = createdUserSessionEntity.Entity;
 

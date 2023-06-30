@@ -18,6 +18,9 @@ public class CreateSessionWebHandler : IRequestHandler<CreateSessionWebRequest, 
     {
         var request = new CreateSessionRequest
         {
+            UserFullName = new(webRequest.UserFullName),
+            UserAge = new(webRequest.UserAge),
+            Bio = new(webRequest.Bio),
             Username = new(webRequest.Username),
         };
 

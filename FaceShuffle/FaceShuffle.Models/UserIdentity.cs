@@ -1,6 +1,9 @@
-﻿namespace FaceShuffle.Models;
+﻿using FaceShuffle.Models.Session;
+
+namespace FaceShuffle.Models;
 
 public class UserIdentity
 {
-    public required string Username { get; init; }
+    public required Username Username { get; init; }
+    public required UserSessionGuid UserSessionGuid { get; init; }
 }

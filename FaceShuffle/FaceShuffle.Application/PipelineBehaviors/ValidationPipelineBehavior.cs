@@ -1,13 +1,12 @@
-﻿using FaceShuffle.Application.Abstractions;
-using FaceShuffle.Application.Extensions;
+﻿using FaceShuffle.Application.Abstractions;     
+using FaceShuffle.Models.Generic;
 using FluentValidation;
 using MediatR;
-using Optional;
 
 namespace FaceShuffle.Application.PipelineBehaviors;
 public class ValidationPipelineBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    private readonly Option<IValidator<TRequest>> _validatorOptional;
+    private readonly Optional<IValidator<TRequest>> _validatorOptional;
 
     public ValidationPipelineBehavior(IOptionalDependency<IValidator<TRequest>> validatorOptional)
     {

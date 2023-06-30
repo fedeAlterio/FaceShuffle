@@ -8,5 +8,8 @@ public class CreateSessionWebRequestValidator : AbstractValidator<CreateSessionW
     public CreateSessionWebRequestValidator()
     {
         RuleFor(x => x.Username).IsUserSessionUsername();
+        RuleFor(x => x.Bio).IsBioText();
+        RuleFor(x => x.UserAge).IsUserAge();
+        RuleFor(x => x.UserFullName).IsUserFullName();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using FaceShuffle.Application.Abstractions;
-using Optional;
+using FaceShuffle.Models.Generic;
 
 namespace FaceShuffle.Web.DependenciesInstallers;
 
@@ -14,10 +14,10 @@ public static class OptionalsInstaller
     {
         public OptionalDependency(IServiceProvider serviceProvider)
         {
-            Optional = serviceProvider.GetService<T>().SomeNotNull()!;
+            Optional = serviceProvider.GetService<T>().ToOptional();
         }
 
         
-        public Option<T> Optional { get; }
+        public Optional<T> Optional { get; }
     }
 }

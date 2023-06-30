@@ -1,7 +1,7 @@
 ﻿using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
 
-namespace FaceShuffle.Application.Abstractions.Repositories;
+namespace FaceShuffle.Application.Repositories;
 public interface IUserSessionRepository
 {
     DbSet<UserSession> DbSet { get; }

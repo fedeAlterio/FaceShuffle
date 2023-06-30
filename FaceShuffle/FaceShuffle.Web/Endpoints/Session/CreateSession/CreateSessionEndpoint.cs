@@ -7,8 +7,8 @@ public class CreateSessionEndpoint : IEndpoint
 {
     public void MapEndpoint(RouteGroupBuilder endpoints)
     {
-        endpoints.MapPost(@"/NewSession", MediatorEndpoint.Handle<CreateSessionWebRequest, CreateSessionWebResponse>)
-                        .WithName("New session")
-                        .WithDefaultEndpointConfiguration();
+        endpoints
+            .MapPost(@"/NewSession", MediatorEndpoint.FromBody<CreateSessionWebRequest, CreateSessionWebResponse>)
+            .WithName("New session");
     }
 }

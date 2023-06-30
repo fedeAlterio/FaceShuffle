@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FaceShuffle.Models.PendingJobs;
 using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ public class RawAppDbContext : DbContext
 {
     public RawAppDbContext(DbContextOptions<RawAppDbContext> options) : base(options)
     {
+        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -16,4 +18,5 @@ public class RawAppDbContext : DbContext
     }
 
     public DbSet<UserSession> UserSessions { get; set; } = default!;
+    public DbSet<PendingJob> PendingJobs { get; set; } = default!;
 }

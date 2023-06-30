@@ -22,6 +22,26 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("FaceShuffle.Models.PendingJobs.PendingJob", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PendingJobs");
+                });
+
             modelBuilder.Entity("FaceShuffle.Models.Session.UserSession", b =>
                 {
                     b.Property<int>("Id")
@@ -29,6 +49,10 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -41,6 +65,13 @@ namespace FaceShuffle.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("SessionGuid")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UserAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserFullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()

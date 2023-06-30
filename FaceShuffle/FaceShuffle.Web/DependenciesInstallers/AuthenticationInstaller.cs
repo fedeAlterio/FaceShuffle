@@ -30,6 +30,7 @@ public static class AuthenticationInstaller
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtConfiguration.Issuer,
                 ValidAudience = jwtConfiguration.Audience,
+                ClockSkew = TimeSpan.FromSeconds(jwtConfiguration.ClockSkewSeconds),
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Key))
             };
         });

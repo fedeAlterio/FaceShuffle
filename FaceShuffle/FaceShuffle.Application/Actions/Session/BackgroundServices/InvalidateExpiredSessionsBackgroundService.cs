@@ -24,14 +24,14 @@ public class InvalidateExpiredSessionsBackgroundService : IBackgroundService
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        using var timer =
-            new PeriodicTimer(TimeSpan.FromMinutes(_userSessionConfiguration.Value.MinutesBeforeExpiration));
+        var period = TimeSpan.FromMinutes(_userSessionConfiguration.Value.MinutesBeforeExpiration);
+        using var timer = new PeriodicTimer(period);
 
         do
         {
             try
             {
-                using var scope = _serviceProvider.CreateScope();
+                await using var scope = _serviceProvider.CreateAsyncScope();
                 var expiredSessionsInvalidator = scope.ServiceProvider
                     .GetRequiredService<IRequestSender<InvalidateAllExpiredSessionsRequest,
                         InvalidateAllExpiredSessionsResponse>>();

@@ -1,5 +1,5 @@
-﻿using FaceShuffle.Application.Abstractions.Repositories;
-using FaceShuffle.Application.Exceptions;
+﻿using FaceShuffle.Application.Exceptions;
+using FaceShuffle.Application.Repositories;
 using FaceShuffle.Models.Session;
 
 namespace FaceShuffle.Application.Extensions;

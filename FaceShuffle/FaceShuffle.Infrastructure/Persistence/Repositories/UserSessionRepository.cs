@@ -1,5 +1,5 @@
-﻿using FaceShuffle.Application.Abstractions.Repositories;
-using FaceShuffle.Application.Extensions;
+﻿using FaceShuffle.Application.Extensions;
+using FaceShuffle.Application.Repositories;
 using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
 

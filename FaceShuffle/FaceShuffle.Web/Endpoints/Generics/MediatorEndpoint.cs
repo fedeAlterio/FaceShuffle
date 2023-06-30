@@ -6,7 +6,7 @@ namespace FaceShuffle.Web.Endpoints.Generics;
 
 public static class MediatorEndpoint
 {
-    public static async Task<TResponse> Handle<TRequest, TResponse>(
+    public static async Task<TResponse> FromBody<TRequest, TResponse>(
         [FromBody] TRequest request,
         IRequestSender<TRequest, TResponse> handler,
         CancellationToken cancellationToken)
@@ -14,5 +14,5 @@ public static class MediatorEndpoint
     {
         var response = await handler.Send(request, cancellationToken);
         return response;
-    }
+    }   
 }

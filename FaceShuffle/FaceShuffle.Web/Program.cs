@@ -1,7 +1,6 @@
 using FaceShuffle.Web;
 using FaceShuffle.Web.DependenciesInstallers;
 using FaceShuffle.Web.Endpoints;
-using FaceShuffle.Web.Endpoints.Generics.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +13,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddSwagger();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(typeof(AuthorizedWebRequestHandler<,>), typeof(AuthorizedWebRequestHandler<,>));
 builder.Services.AddTransient<Startup>();
 
 var app = builder.Build();

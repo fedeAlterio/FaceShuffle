@@ -1,6 +1,5 @@
-﻿using FaceShuffle.Models.Extensions;
-using FaceShuffle.Models.Session.Validators;
-using FluentValidation;
+﻿using FaceShuffle.Models.Session.Validators;
+using FaceShuffle.Models.Validation;
 
 namespace FaceShuffle.Models.Session;
 public record Username
@@ -8,15 +7,7 @@ public record Username
     public Username(string value)
     {
         Value = value;
-        new UsernameValidator().ValidateDomainAndThrow(this);
-    }
-
-    class UsernameValidator : AbstractValidator<Username>
-    {
-        public UsernameValidator()
-        {
-            RuleFor(x => x.Value).IsUserSessionUsername();
-        }
+        this.ValidatePropertyAndThrow(x => x.Value, x => x.IsUserSessionUsername());
     }
 
     public string Value { get; }
