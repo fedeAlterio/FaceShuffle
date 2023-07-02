@@ -21,7 +21,7 @@ internal class UpdateUserSessionLastSeenDate : INotificationHandler<UserAuthenti
     public async Task Handle(UserAuthenticatedEvent notification, CancellationToken cancellationToken)
     {
         var userSession =
-            await _appDbContext.UserSessions.GetActiveSessionByUsername(notification.UserIdentity.Username, cancellationToken);
+            await _appDbContext.UserSessions.FindSessionByUsername(notification.UserIdentity.Username, cancellationToken);
 
         userSession.LastSeenDate = DateTime.UtcNow;
         userSession.MinutesBeforeExpiration = _userSessionConfiguration.MinutesBeforeExpiration;

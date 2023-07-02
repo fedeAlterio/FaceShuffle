@@ -7,9 +7,9 @@ public class GetPicturesMetadataEndpoint : IEndpoint
     public void MapEndpoint(RouteGroupBuilder endpoints)
     {
         endpoints
-            .MapPost(@"/GetPicturesMetadata",
-                MediatorEndpoint.FromBody<GetPicturesMetadataWebRequest, GetPicturesMetadataWebResponse>)
-            .WithName("GetPicturesMetadata")
+            .MapGet(@"/GetPicturesMetadata",
+                MediatorEndpoint.FromEmptyRequest<GetPicturesMetadataWebRequest, GetPicturesMetadataWebResponse>)
+            .WithName("Get pictures metadata")
             .RequireAuthorization();
     }
 }

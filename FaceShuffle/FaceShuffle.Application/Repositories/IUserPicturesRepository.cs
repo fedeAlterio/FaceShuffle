@@ -11,7 +11,7 @@ public interface IUserPicturesRepository
         CancellationToken cancellationToken);
 
     Task<IEnumerable<UserPictureMetadata>> LoadUserPicturesMetadata(UserSessionGuid userSessionGuid, CancellationToken cancellationToken);
-    Task<Stream> LoadUserPictureStream(UserPictureMetadata userPictureMetadata, CancellationToken cancellationToken);
+    Task<(Stream pictureStream, UserPictureMetadata pictureMetadata)> LoadUserPictureStream(UserSessionGuid sessionGuid, UserPictureGuid pictureGuid, CancellationToken cancellationToken);
     Task DeleteAllUserSessionPictures(UserSessionGuid userSessionGuid, CancellationToken cancellationToken);
     Task DeleteUserPicture(UserPictureMetadata userPictureMetadata, CancellationToken cancellationToken);
 }

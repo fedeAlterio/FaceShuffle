@@ -4,8 +4,8 @@ namespace FaceShuffle.Web.Endpoints.Session.CreateSession;
 
 public class CreateSessionWebRequest : IRequest<CreateSessionWebResponse>
 {
-    public required string Username { get; init; }
-    public required string Bio { get; init; }
-    public required int UserAge { get; init; }
-    public required string UserFullName { get; init; }
+    public string Username { get; init; } = null!;
+    public string Bio { get; init; } = null!;
+    public int UserAge { get; init; }
+    public string UserFullName { get; init; } = null!;
 }

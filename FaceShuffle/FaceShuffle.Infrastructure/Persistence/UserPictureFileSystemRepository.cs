@@ -1,4 +1,5 @@
 ﻿using FaceShuffle.Application.Configuration;
+using FaceShuffle.Application.Exceptions;
 using FaceShuffle.Application.Repositories;
 using FaceShuffle.Models.Session;
 using FaceShuffle.Models.UserPictures;
@@ -37,18 +38,29 @@ public class UserPictureFileSystemRepository : IUserPicturesRepository
 
         var picturesMetadata = Directory
             .GetFiles(sessionDirectoryPath)
-            .Select(path => GetUserMetadataFromFileName(userSessionGuid, path));
+            .Select(path => GetPictureMetadataFromFileName(userSessionGuid, path));
 
         return Task.FromResult(picturesMetadata);
     }
 
-    public Task<Stream> LoadUserPictureStream(UserPictureMetadata userPictureMetadata, CancellationToken cancellationToken)
+    public Task<(Stream pictureStream, UserPictureMetadata pictureMetadata)> LoadUserPictureStream(UserSessionGuid sessionGuid, UserPictureGuid pictureGuid, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var picturePath = GetPictureFullPath(userPictureMetadata);
-        Stream stream = File.Open(picturePath, FileMode.Open);
-        return Task.FromResult(stream);
+        var picturesPath = GetPicturesDirectoryPathForSession(sessionGuid);
+        var pictureGuidString = pictureGuid.Value.ToString();
+        var picturePath = Directory
+                           .EnumerateFiles(picturesPath + "\\")
+                           .FirstOrDefault(path => Path.GetFileName(path).StartsWith(pictureGuidString))
+                       ?? throw new UserReadableAppException
+                       {
+                           UserText = $"Picture with id {pictureGuidString} not found"
+                       };
+
+        Stream pictureStream = File.Open(picturePath, FileMode.Open);
+        var pictureMetadata = GetPictureMetadataFromFileName(sessionGuid, picturePath);
+
+        return Task.FromResult((pictureStream, pictureMetadata));
     }
 
     public Task DeleteAllUserSessionPictures(UserSessionGuid userSessionGuid, CancellationToken cancellationToken)
@@ -105,7 +117,7 @@ public class UserPictureFileSystemRepository : IUserPicturesRepository
         return Path.Combine(GetPicturesDirectoryPathForSession(userPictureMetadata.SessionGuid), GetFileName(userPictureMetadata));
     }
 
-    UserPictureMetadata GetUserMetadataFromFileName(UserSessionGuid userSessionGuid, string path)
+    UserPictureMetadata GetPictureMetadataFromFileName(UserSessionGuid userSessionGuid, string path)
     {
         var rawFileName = Path.GetFileName(path);
         var metadataSplit = rawFileName.Split('_');
