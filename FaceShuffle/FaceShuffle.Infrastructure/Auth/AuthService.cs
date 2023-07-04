@@ -29,8 +29,13 @@ public class AuthService : IAuthService
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfiguration.Value.Key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-        var tokenDescriptor = new JwtSecurityToken(_jwtConfiguration.Value.Issuer, _jwtConfiguration.Value.Audience, claims,
-            expires: DateTime.Now.AddMinutes(_userSessionConfiguration.Value.MinutesBeforeExpiration), signingCredentials: credentials);
+        var tokenDescriptor = new JwtSecurityToken(
+            _jwtConfiguration.Value.Issuer,
+            _jwtConfiguration.Value.Audience,
+            claims,
+            expires: DateTime.Now.AddMinutes(_userSessionConfiguration.Value.MinutesBeforeExpiration), 
+            signingCredentials: credentials);
+
         return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
     }
 

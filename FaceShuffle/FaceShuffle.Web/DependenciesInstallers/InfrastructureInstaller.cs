@@ -46,7 +46,7 @@ public static class InfrastructureInstaller
 
     static void AddDbContext(this IServiceCollection @this, IConfiguration configuration)
     {
-        @this.AddDbContext<RawAppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        @this.AddDbContext<RawAppDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("Postgres")));
         @this.AddTransient<IAppDbContext, AppDbContext>();
     }
 
