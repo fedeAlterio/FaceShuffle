@@ -23,6 +23,11 @@ public class AppDbContext : IAppDbContext
     private IPendingJobsRepository? _pendingJobs;
     public IPendingJobsRepository PendingJobs => _pendingJobs ??= _serviceProvider.GetRequiredService<IPendingJobsRepository>();
 
+
+    private IMessagesRepository? _messages;
+    public IMessagesRepository Messages => _messages ??= _serviceProvider.GetRequiredService<IMessagesRepository>();
+
+
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return _dbContext.SaveChangesAsync(cancellationToken);

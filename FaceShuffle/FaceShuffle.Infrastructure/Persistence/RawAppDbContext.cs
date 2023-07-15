@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FaceShuffle.Models.Messages;
 using FaceShuffle.Models.PendingJobs;
 using FaceShuffle.Models.Session;
 using Microsoft.EntityFrameworkCore;
@@ -19,4 +20,5 @@ public class RawAppDbContext : DbContext
 
     public DbSet<UserSession> UserSessions { get; set; } = default!;
     public DbSet<PendingJob> PendingJobs { get; set; } = default!;
+    public DbSet<Message> Messages { get; set; } = default!;
 }

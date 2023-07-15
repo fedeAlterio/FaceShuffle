@@ -7,7 +7,7 @@ using FaceShuffle.Web.Endpoints.Session.UpdateUserProfile;
 
 namespace FaceShuffle.Web.Endpoints.Session;
 
-public static class SessionEndpointsInstaller
+public static class SessionEndpointsMapper
 {
     public static RouteGroupBuilder MapSessionEndpoints(this RouteGroupBuilder @this, IServiceProvider serviceProvider)
     {

@@ -1,4 +1,5 @@
 ﻿using FaceShuffle.Models.Session;
+using FaceShuffle.Models.Session.Validators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -16,16 +17,19 @@ internal class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
             .ValueGeneratedOnAdd();
 
         builder.Property(x => x.Bio)
-            .HasConversion(x => x.Value, x => new(x));
+            .HasConversion(x => x.Value, x => new(x))
+            .HasMaxLength(BioValidator.MaximumLength);
 
         builder.Property(x => x.UserAge)
             .HasConversion(x => x.Value, x => new(x));
 
         builder.Property(x => x.UserFullName)
-            .HasConversion(x => x.Value, x => new(x));
+            .HasConversion(x => x.Value, x => new(x))
+            .HasMaxLength(UserFullNameValidator.MaximumLength);
 
         builder.Property(x => x.Username)
             .HasConversion(x => x.Value, x => new (x))
+            .HasMaxLength(UsernameValidator.MaximumLength)
             .IsRequired();
 
         builder.Property(x => x.SessionGuid)

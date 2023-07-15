@@ -23,6 +23,7 @@ public static class InfrastructureInstaller
         @this.AddDbContext(configuration); 
 
         @this.AddUserSession();
+        @this.AddMessages();
         @this.AddPendingJobs(configuration);
         @this.AddMediatRServices();
         @this.AddAuthServices();
@@ -74,6 +75,11 @@ public static class InfrastructureInstaller
                 Root = Path.Combine(hostingEnvironment.WebRootPath, "SessionPictures")
             };
         });
+    }
+
+    static void AddMessages(this IServiceCollection @this)
+    {
+        @this.AddScoped<IMessagesRepository, MessagesRepository>();
     }
 
     static void AddPendingJobs(this IServiceCollection @this, IConfiguration configuration)

@@ -1,6 +1,7 @@
 ﻿using FaceShuffle.Web.Endpoints.Abstractions;
 using FaceShuffle.Web.Endpoints.EndpointFilters.Auth;
 using FaceShuffle.Web.Endpoints.EndpointFilters.ExceptionsFilters;
+using FaceShuffle.Web.Endpoints.Messages;
 using FaceShuffle.Web.Endpoints.Secret;
 using FaceShuffle.Web.Endpoints.Session;
 
@@ -22,7 +23,9 @@ internal static class EndpointsInstaller
 
         rootGroup
             .MapSessionEndpoints(serviceProvider)
-            .MapSecretsEndpoints(serviceProvider);
+            .MapMessagesEndpoints(serviceProvider)
+            .MapSecretsEndpoints(serviceProvider)
+            ;
     }
 
     public static RouteGroupBuilder MapEndpoint<TEndpoint>(this RouteGroupBuilder @this, IServiceProvider serviceProvider) where TEndpoint : IEndpoint

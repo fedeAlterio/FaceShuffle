@@ -4,11 +4,10 @@ internal static class SecretEndpointsInstaller
 {
     public static RouteGroupBuilder MapSecretsEndpoints(this RouteGroupBuilder @this, IServiceProvider serviceProvider)
     {
-        var secretEndpoints = @this.MapGroup("Secret");
-        secretEndpoints
+        @this.MapGroup("Secret")
             .RequireAuthorization()
             .MapEndpoint<SecretEndpoint>(serviceProvider);
 
-        return secretEndpoints;
+        return @this;
     }
 }
